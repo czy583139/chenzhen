@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import login from '@/components/login.vue' //由webpack模板提供这么写法
+import login from '@/components/login.vue' // 由webpack模板提供这么写法
 
 Vue.use(Router)
 
