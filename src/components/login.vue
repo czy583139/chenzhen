@@ -15,15 +15,15 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       formdata: {
-        name: "",
-        password: ""
+        name: '',
+        password: ''
       }
-    };
+    }
   }
-};
+}
 </script>
 
 <style>
