@@ -1,7 +1,7 @@
 <template>
   <div class="box">
-    <h2>用户登录</h2>
-    <el-form label-position="top" label-width="80px" :model="formdata">
+    <el-form label-position="top" label-width="80px" :model="formdata" class="login">
+      <h2>用户登录</h2>
       <el-form-item label="用户名">
         <el-input v-model=" formdata.name"></el-input>
       </el-form-item>
@@ -15,16 +15,32 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       formdata: {
-        name: '',
-        password: ''
+        name: "",
+        password: ""
       }
-    }
+    };
   }
-}
+};
 </script>
 
 <style>
+.box {
+  background-color: #324152;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login {
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 400px;
+  padding: 30px;
+}
+.btn {
+  width: 100%;
+}
 </style>
