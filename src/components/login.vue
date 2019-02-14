@@ -3,7 +3,7 @@
     <el-form label-position="top" label-width="80px" :model="formdata" class="login">
       <h2>用户登录</h2>
       <el-form-item label="用户名">
-        <el-input v-model=" formdata.username"></el-input>
+        <el-input v-model=" formdata.username" ref="input"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model=" formdata.password"></el-input>
@@ -46,6 +46,9 @@ export default {
         this.$message.error(msg);
       }
     }
+  },
+  mounted() {
+    this.$refs.input.focus();
   }
 };
 </script>
