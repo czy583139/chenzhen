@@ -3,13 +3,13 @@
     <el-header>
       <el-row>
         <el-col :span="4">
-          <div class="grid-content bg-purple">2</div>
+          <img src="@/assets/logo.png" alt="图片加载失败">
         </el-col>
         <el-col :span="19">
-          <div class="grid-content bg-purple-light">3</div>
+          <h2>电商后台管理系统</h2>
         </el-col>
         <el-col :span="1">
-          <div class="grid-content bg-purple">4</div>
+          <a href="#" class="logout">退出</a>
         </el-col>
       </el-row>
     </el-header>
@@ -25,4 +25,30 @@ export default {};
 </script>
 
 <style>
+.content {
+  height: 100%;
+  background-color: #b3c0d1;
+}
+.aside {
+  background-color: yellow;
+}
+
+.main {
+  background-color: green;
+}
+
+h2 {
+  line-height: 60px;
+  text-align: center;
+  color: #ffffff;
+  width: 100%;
+}
+.logout {
+  line-height: 60px;
+  text-decoration: none;
+  width: 100%;
+}
+el-col {
+  width: 100%;
+}
 </style>
