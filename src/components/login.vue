@@ -3,27 +3,49 @@
     <el-form label-position="top" label-width="80px" :model="formdata" class="login">
       <h2>用户登录</h2>
       <el-form-item label="用户名">
-        <el-input v-model=" formdata.name"></el-input>
+        <el-input v-model=" formdata.username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model=" formdata.password"></el-input>
       </el-form-item>
-      <el-button type="success" class="btn">登录</el-button>
+      <el-button type="success" class="btn" @click.prevent="getLogin()">登录</el-button>
     </el-form>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       formdata: {
-        name: '',
-        password: ''
+        username: "",
+        password: ""
       }
+    };
+  },
+  methods: {
+    getLogin() {
+      this.$http
+        .post(`login`, this.formdata)
+        .then(res => {
+          const {
+            data: {
+              data,
+              meta: { msg, status }
+            }
+          } = res;
+          if (status === 200) {
+            console.log("success----");
+          } else {
+            this.$message.error(msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
-}
+};
 </script>
 
 <style>
