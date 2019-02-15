@@ -15,33 +15,44 @@
     </el-header>
     <el-container>
       <el-aside width="200px" class="aside">
-        <el-menu :unique-opened="true" :router="true">
+        <el-menu
+          :unique-opened="true"
+          :router="true"
+          default-active="2"
+          class="el-menu-vertical-demo"
+        >
+          <!-- 1 -->
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
 
-            <el-menu-item index="1-1">
+            <el-menu-item index="users">
               <i class="el-icon-menu"></i>
-              用户列表
+              <span>用户列表</span>
             </el-menu-item>
           </el-submenu>
+
+          <!-- 2 -->
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>权限管理</span>
             </template>
 
-            <el-menu-item index="2-1">
+            <el-menu-item index="1-1">
               <i class="el-icon-menu"></i>
-              角色列表
+              <span>角色列表</span>
             </el-menu-item>
-            <el-menu-item index="2-2">
+
+            <el-menu-item index="1-1">
               <i class="el-icon-menu"></i>
-              权限列表
+              <span>权限列表</span>
             </el-menu-item>
           </el-submenu>
+
+          <!-- 3 -->
           <el-submenu index="3">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -50,18 +61,19 @@
 
             <el-menu-item index="1-1">
               <i class="el-icon-menu"></i>
-              商品列表
+              <span>商品列表</span>
             </el-menu-item>
             <el-menu-item index="1-1">
               <i class="el-icon-menu"></i>
-              分类参数
+              <span>分类参数</span>
             </el-menu-item>
             <el-menu-item index="1-1">
               <i class="el-icon-menu"></i>
-              商品分类
+              <span>商品分类</span>
             </el-menu-item>
           </el-submenu>
 
+          <!-- 4 -->
           <el-submenu index="4">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -70,9 +82,11 @@
 
             <el-menu-item index="1-1">
               <i class="el-icon-menu"></i>
-              订单列表
+              <span>订单列表</span>
             </el-menu-item>
           </el-submenu>
+
+          <!-- 5 -->
           <el-submenu index="5">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -81,20 +95,23 @@
 
             <el-menu-item index="1-1">
               <i class="el-icon-menu"></i>
-              数据报表
+              <span>数据报表</span>
             </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main class="main">Main</el-main>
+      <el-main class="main">
+        <router-view></router-view>
+      </el-main>
+      <!-- 这里得单独给主体部分提供容器，因为App.vue的容器是给login页面和home页面提供的整个容器 -->
     </el-container>
   </el-container>
 </template>
 
 <script>
 export default {
-  //在home组件渲染完之前触发，如果当home组件渲染完毕，则表示登录了，所以严格来说必须在这个函数里面
-  //也不需要写else，因为钩子函数自动触发，如果登录成功
+  // 在home组件渲染完之前触发，如果当home组件渲染完毕，则表示登录了，所以严格来说必须在这个函数里面
+  // 也不需要写else，因为钩子函数自动触发，如果登录成功
   beforeMount() {
     if (!localStorage.getItem("token")) {
       this.$router.push({
@@ -125,7 +142,7 @@ export default {
 }
 
 .main {
-  background-color: green;
+  background-color: #eeee;
 }
 
 h2 {
