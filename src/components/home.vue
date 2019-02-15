@@ -9,13 +9,13 @@
           <h2>电商后台管理系统</h2>
         </el-col>
         <el-col :span="1">
-          <a href="#" class="logout">退出</a>
+          <a href="#" class="logout" @click="getOut()">退出</a>
         </el-col>
       </el-row>
     </el-header>
     <el-container>
       <el-aside width="200px" class="aside">
-        <el-menu :unique-opened="true">
+        <el-menu :unique-opened="true" :router="true">
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -92,7 +92,27 @@
 </template>
 
 <script>
-export default {};
+export default {
+  //在home组件渲染完之前触发，如果当home组件渲染完毕，则表示登录了，所以严格来说必须在这个函数里面
+  //也不需要写else，因为钩子函数自动触发，如果登录成功
+  beforeMount() {
+    if (!localStorage.getItem("token")) {
+      this.$router.push({
+        name: "login"
+      });
+      this.$message.warning("请登录");
+    }
+  },
+  methods: {
+    getOut() {
+      localStorage.clear();
+      this.$router.push({
+        name: "login"
+      });
+      this.$message.success("退出成功");
+    }
+  }
+};
 </script>
 
 <style>
