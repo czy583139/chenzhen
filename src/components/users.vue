@@ -10,8 +10,14 @@
     <el-row class="search">
       <el-col>
         <!-- 搜索框 -->
-        <el-input placeholder="请输入内容" v-model="query" class="searchInput">
-          <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input
+          @clear="getAllUsers()"
+          clearable
+          class="searchInput"
+          placeholder="请输入内容"
+          v-model="query"
+        >
+          <el-button slot="append" icon="el-icon-search" @click="searchUser()"></el-button>
         </el-input>
         <el-button type="success" plain>添加用户</el-button>
       </el-col>
@@ -27,13 +33,42 @@
       <el-table-column label="创建日期" width="140">
         <template slot-scope="scope">{{scope.row.create_time | fmtdate}}</template>
       </el-table-column>
-      <el-table-column label="用户状态" width="140"></el-table-column>
-      <el-table-column label="操作" width="200"></el-table-column>
+      <el-table-column label="用户状态" width="140">
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="200">
+        <template>
+          <el-button type="primary" icon="el-icon-edit" circle size="mini" plain></el-button>
+          <el-button type="success" icon="el-icon-check" circle size="mini" plain></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle size="mini" plain></el-button>
+        </template>
+      </el-table-column>
     </el-table>
+    <!-- 分页器部分 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pagenum"
+      :page-sizes="[1,3,5]"
+      :page-size="2"
+      :pager-count="5"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    ></el-pagination>
   </el-card>
 </template>
 
 <script>
+//  分页
+//     @size-change 每页条数改变时
+//     @current-change 页码改变时 (当前1页 点击2页 )
+//     current-page 当前显示第几页 页码
+//     page-sizes 每页条数的不同情况的数组
+//     layout 附加功能
+//     total 一共数据的条数
+
 // create_time: 1486720211
 // email: "adsfad@qq.com"
 // id: 500
@@ -49,29 +84,57 @@ export default {
       //当前页码
       pagenum: 1,
       //每页显示条数
-      pagesize: 5
+      pagesize: 1,
+      total: -1 // 当为-1时，表示请求条数失败了，如果写1那么写死了不太好
     };
   },
-  mounted() {
+
+  created() {
     this.getList();
   },
   methods: {
     async getList() {
+      //获得token中的权限
       const AUTH_TOKEN = localStorage.getItem("token");
       this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
 
+      //采用拼接字符串的方法设置请求体
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
           this.pagesize
         }`
       );
+      // 解构赋值
+      console.log(res);
       const {
         data,
         meta: { msg, status }
       } = res.data;
       if (status === 200) {
+        this.total = data.total;
         this.list = data.users;
       }
+    },
+    // element中的方法，下面是自己写的代码
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.pagenum = 1;
+      this.pagesize = val;
+      this.getList();
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+
+      this.pagenum = val;
+      this.getList();
+    },
+    searchUser() {
+      this.pagenum = 1;
+      //qurey已经绑定了这个组件，是嵌套关系，所以直接影响
+      this.getList();
+    },
+    getAllUsers() {
+      this.getList();
     }
   }
 };
