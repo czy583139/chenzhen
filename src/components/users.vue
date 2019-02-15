@@ -19,7 +19,7 @@
         >
           <el-button slot="append" icon="el-icon-search" @click="searchUser()"></el-button>
         </el-input>
-        <el-button type="success" plain>添加用户</el-button>
+        <el-button type="success" plain @click="showDiaAddUser()">添加用户</el-button>
       </el-col>
     </el-row>
     <!-- 表格区域 -->
@@ -57,6 +57,29 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
+
+    <el-dialog title="添加用户" :visible.sync="dialogFormVisibleAdd">
+      <!-- 表单 -->
+      <el-form label-position="left" label-width="80px" :model="formdata">
+        <el-form-item label="用户名">
+          <el-input v-model="formdata.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="formdata.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="formdata.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="formdata.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleAdd = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -79,11 +102,20 @@
 export default {
   data() {
     return {
+      // 对话框
+      dialogFormVisibleAdd: false,
+      // 表单数据-> 将来发送post请求->请求体->
+      formdata: {
+        username: "",
+        password: "",
+        email: "",
+        mobile: ""
+      },
       query: "",
       list: [],
-      //当前页码
+      // 当前页码
       pagenum: 1,
-      //每页显示条数
+      // 每页显示条数
       pagesize: 1,
       total: -1 // 当为-1时，表示请求条数失败了，如果写1那么写死了不太好
     };
@@ -94,11 +126,11 @@ export default {
   },
   methods: {
     async getList() {
-      //获得token中的权限
+      // 获得token中的权限
       const AUTH_TOKEN = localStorage.getItem("token");
       this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
 
-      //采用拼接字符串的方法设置请求体
+      // 采用拼接字符串的方法设置请求体
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
           this.pagesize
@@ -108,7 +140,7 @@ export default {
       console.log(res);
       const {
         data,
-        meta: { msg, status }
+        meta: { status }
       } = res.data;
       if (status === 200) {
         this.total = data.total;
@@ -130,11 +162,14 @@ export default {
     },
     searchUser() {
       this.pagenum = 1;
-      //qurey已经绑定了这个组件，是嵌套关系，所以直接影响
+      // qurey已经绑定了这个组件，是嵌套关系，所以直接影响
       this.getList();
     },
     getAllUsers() {
       this.getList();
+    },
+    showDiaAddUser() {
+      this.dialogFormVisibleAdd = true;
     }
   }
 };
