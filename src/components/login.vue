@@ -15,38 +15,38 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       formdata: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       }
-    };
+    }
   },
   methods: {
-    async getLogin() {
-      const res = await this.$http.post(`login`, this.formdata);
+    async getLogin () {
+      const res = await this.$http.post(`login`, this.formdata)
       const {
         data: {
           data,
           meta: { msg, status }
         }
-      } = res;
+      } = res
       if (status === 200) {
-        this.$message.success(msg);
-        localStorage.setItem("token", data.token);
+        this.$message.success(msg)
+        localStorage.setItem('token', data.token)
         this.$router.push({
-          name: "home"
-        });
+          name: 'home'
+        })
       } else {
-        this.$message.error(msg);
+        this.$message.error(msg)
       }
     }
   },
-  mounted() {
-    this.$refs.input.focus();
+  mounted () {
+    this.$refs.input.focus()
   }
-};
+}
 </script>
 
 <style>
