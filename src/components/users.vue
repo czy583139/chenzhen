@@ -39,7 +39,12 @@
       </el-table-column>
       <el-table-column label="用户状态" width="140">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+          <el-switch
+            v-model="scope.row.mg_state"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="statusList(scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200">
@@ -202,6 +207,7 @@ export default {
       this.getList();
     },
     searchUser() {
+      this.pagenum = 1;
       // qurey已经绑定了这个组件，是嵌套关系，所以直接影响
       this.getList();
     },
@@ -244,7 +250,10 @@ export default {
         });
     },
     async UpdateList() {
-      const res = await this.$http.put(`users/${this.formdata.id}`,this.formdata);
+      const res = await this.$http.put(
+        `users/${this.formdata.id}`,
+        this.formdata
+      );
       const {
         meta: { msg, status }
       } = res.data;
@@ -258,6 +267,11 @@ export default {
       this.formdata = user;
 
       this.dialogFormVisibleUpdate = true;
+    },
+    async statusList(user) {
+      const res = await this.$http.put(
+        `users/${user.id}/state/${user.mg_state}`
+      );
     }
   },
   watch: {
