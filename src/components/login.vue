@@ -66,4 +66,8 @@ export default {
 .btn {
   width: 100%;
 }
+h2 {
+  color: black !important;
+  text-align: left !important;
+}
 </style>

@@ -10,6 +10,9 @@
     <el-row class="search">
       <el-col>
         <!-- 搜索框 -->
+        <!-- clearable有一个点击清除输入框内容后，渲染刷新数据
+        clear	在点击由 clearable 属性生成的清空按钮时触发
+        -->
         <el-input
           @clear="getAllUsers()"
           clearable
@@ -17,6 +20,7 @@
           placeholder="请输入内容"
           v-model="query"
         >
+          {{query}}
           <el-button slot="append" icon="el-icon-search" @click="searchUser()"></el-button>
         </el-input>
         <el-button type="success" plain @click="showDiaAddUser()">添加用户</el-button>
@@ -137,8 +141,8 @@ export default {
         }`
       );
       // 解构赋值
-      console.log(res);
-      const {
+
+      let {
         data,
         meta: { status }
       } = res.data;
@@ -161,7 +165,7 @@ export default {
       this.getList();
     },
     searchUser() {
-      this.pagenum = 1;
+      // this.pagenum = 1;
       // qurey已经绑定了这个组件，是嵌套关系，所以直接影响
       this.getList();
     },
@@ -170,6 +174,13 @@ export default {
     },
     showDiaAddUser() {
       this.dialogFormVisibleAdd = true;
+    }
+  },
+  watch: {
+    query(newval, oldval) {
+      if (this.query === "") {
+        this.getList();
+      }
     }
   }
 };
