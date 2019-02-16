@@ -31,7 +31,7 @@
       <!-- 1. label 控制的是当前列的表头
       2. prop 控制的是当前列单元格的数据,prop 的值来源于外层 data 绑定的数据 tableData 数组中对象的 key 名-->
       <el-table-column prop="id" label="#" width="80"></el-table-column>
-      <el-table-column prop="role_name" label="姓名" width="120"></el-table-column>
+      <el-table-column prop="username" label="姓名" width="120"></el-table-column>
       <el-table-column prop="email" label="邮箱" width="140"></el-table-column>
       <el-table-column prop="mobile" label="电话" width="140"></el-table-column>
       <el-table-column label="创建日期" width="140">
@@ -43,10 +43,24 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200">
-        <template>
-          <el-button type="primary" icon="el-icon-edit" circle size="mini" plain></el-button>
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            size="mini"
+            plain
+            @click="Updateshow(scope.row)"
+          ></el-button>
           <el-button type="success" icon="el-icon-check" circle size="mini" plain></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle size="mini" plain></el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            size="mini"
+            plain
+            @click="deleteList(scope.row)"
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -81,9 +95,31 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleAdd = false">确 定</el-button>
+        <el-button type="primary" @click="putList()">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 编辑方框弹出层 -->
+    <el-dialog title="编辑用户" :visible.sync="dialogFormVisibleUpdate">
+      <!-- 表单 -->
+      <el-form label-position="left" label-width="80px" :model="formdata">
+        <el-form-item label="用户名">
+          <el-input v-model="formdata.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="formdata.mobile"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="formdata.email"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleUpdate = false">取 消</el-button>
+        <el-button type="primary" @click="UpdateList()">确 定</el-button>
+      </div>
+    </el-dialog>
+  </el-card>
+</template>
   </el-card>
 </template>
 
@@ -106,6 +142,7 @@
 export default {
   data() {
     return {
+      dialogFormVisibleUpdate: false,
       // 对话框
       dialogFormVisibleAdd: false,
       // 表单数据-> 将来发送post请求->请求体->
@@ -142,7 +179,7 @@ export default {
       );
       // 解构赋值
 
-      let {
+      const {
         data,
         meta: { status }
       } = res.data;
@@ -165,7 +202,6 @@ export default {
       this.getList();
     },
     searchUser() {
-      // this.pagenum = 1;
       // qurey已经绑定了这个组件，是嵌套关系，所以直接影响
       this.getList();
     },
@@ -173,7 +209,55 @@ export default {
       this.getList();
     },
     showDiaAddUser() {
+      this.formdata = {};
       this.dialogFormVisibleAdd = true;
+    },
+    async putList() {
+      const res = await this.$http.post("users", this.formdata);
+      const {
+        meta: { msg, status }
+      } = res.data;
+      if (status === 201) {
+        this.getList();
+        this.dialogFormVisibleAdd = false;
+        this.$message.success("添加成功");
+      }
+    },
+    deleteList(user) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$http.delete(`users/${user.id}`);
+          const {
+            meta: { msg, status }
+          } = res.data;
+          if (status === 200) {
+            this.getList();
+            this.$message.success("删除成功");
+          }
+        })
+        .catch(() => {
+          this.$message.info("取消成功");
+        });
+    },
+    async UpdateList() {
+      const res = await this.$http.put(`users/${this.formdata.id}`,this.formdata);
+      const {
+        meta: { msg, status }
+      } = res.data;
+      if (status === 200) {
+        console.log(res);
+        this.getList();
+        this.dialogFormVisibleUpdate = false;
+      }
+    },
+    Updateshow(user) {
+      this.formdata = user;
+
+      this.dialogFormVisibleUpdate = true;
     }
   },
   watch: {
