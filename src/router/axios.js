@@ -18,7 +18,7 @@ HttpServer.install = function (Vue) {
       config.headers["Authorization"] = AUTH_TOKEN;
 
     }
-    console.log(config);
+
     return config;
   }, function (error) {
     // 对请求错误做些什么
