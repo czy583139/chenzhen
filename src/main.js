@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from 'axios'
+import HttpServer from '@/router/axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import moment from 'moment'
@@ -18,15 +18,13 @@ Vue.filter('fmtdate', (v) => {
   return moment(v).format('YYYY-MM-DD')
 })
 
-axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
-Vue.prototype.$http = axios
-
 //调用element插件
 Vue.use(ElementUI)
 
 // 设置 Vue.config.productionTip = false 来关闭生产模式下给出的提示
 Vue.config.productionTip = false
 
+Vue.use(HttpServer)
 
 
 // const config = {

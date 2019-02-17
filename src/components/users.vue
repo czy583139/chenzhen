@@ -216,8 +216,8 @@ export default {
   methods: {
     async getList() {
       // 获得token中的权限
-      const AUTH_TOKEN = localStorage.getItem("token");
-      this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+      // const AUTH_TOKEN = localStorage.getItem("token");
+      // this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
 
       // 采用拼接字符串的方法设置请求体
       const res = await this.$http.get(
