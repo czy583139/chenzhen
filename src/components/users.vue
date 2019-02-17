@@ -57,7 +57,14 @@
             plain
             @click="Updateshow(scope.row)"
           ></el-button>
-          <el-button type="success" icon="el-icon-check" circle size="mini" plain></el-button>
+          <el-button
+            type="success"
+            icon="el-icon-check"
+            circle
+            size="mini"
+            plain
+            @click="showAdmin(scope.row)"
+          ></el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
@@ -123,6 +130,34 @@
         <el-button type="primary" @click="UpdateList()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 用户权限弹出框 -->
+    <el-dialog title="分配角色" :visible.sync="dialogFormVisiblerole">
+      <el-form :model="formdata" label-width="80px">
+        <el-form-item label="用户名">{{formdata.username}}</el-form-item>
+        <el-form-item label="角色">
+          <el-select v-model="selectVal" placeholder="请选择角色">
+            <el-option label="请选择" :value="selectVal" disabled></el-option>
+            <el-option
+              v-for="(itme) in roles"
+              :key="itme.id"
+              :label="itme.roleName"
+              :value="itme.id"
+            ></el-option>
+            <!-- 遍历option，一定要给变化属性加上v-bind，不然属性就成为字符串 -->
+            <!-- 
+              v-model 绑定下拉框元素
+              1. 当外层v-model的数据值和option的请选择的value值相等时，此时默认选择此项
+              2. 当选择某个 option 时,v-model 的数据的值等于选中的 label 的 value 值
+            -->
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisiblerole = false">取 消</el-button>
+        <el-button type="primary" @click="Updaterole()">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
   </el-card>
@@ -147,6 +182,12 @@
 export default {
   data() {
     return {
+      roles: [],
+      //这个值是当前数据rid值，为了避免冲突id这里选择-1代替，因为后台数据中没有-1标示值
+      selectVal: -1,
+      //下拉菜单值
+      dialogFormVisiblerole: false,
+      //角色弹出框
       dialogFormVisibleUpdate: false,
       // 对话框
       dialogFormVisibleAdd: false,
@@ -155,7 +196,8 @@ export default {
         username: "",
         password: "",
         email: "",
-        mobile: ""
+        mobile: "",
+        id: ""
       },
       query: "",
       list: [],
@@ -241,6 +283,7 @@ export default {
             meta: { msg, status }
           } = res.data;
           if (status === 200) {
+            this.pagenum = 1;
             this.getList();
             this.$message.success("删除成功");
           }
@@ -272,6 +315,33 @@ export default {
       const res = await this.$http.put(
         `users/${user.id}/state/${user.mg_state}`
       );
+    },
+    async showAdmin(user) {
+      this.formdata.username = user.username;
+      this.formdata.id = user.id;
+      this.dialogFormVisiblerole = true;
+
+      const res = await this.$http.get(`roles`);
+      //这一步需要获得角色的接口，在文档的下面，获得角色名称和id
+      const { data } = res.data;
+      this.roles = data;
+
+      const res2 = await this.$http.get(`users/${user.id}`);
+      //这一步需要获取到这个查询用户信息的路径，找到里面有一个rid就是上面路径角色id
+      this.selectVal = res2.data.data.rid;
+    },
+    async Updaterole() {
+      const res = await this.$http.put(`users/${this.formdata.id}/role`, {
+        rid: this.selectVal //这里必须传入rid名字，否则服务器会报错，必须设置权限id名字，根据文档要求来的
+      });
+      const {
+        data,
+        meta: { status }
+      } = res.data;
+      if (status === 200) {
+        this.getList();
+        this.dialogFormVisiblerole = false;
+      }
     }
   },
   watch: {

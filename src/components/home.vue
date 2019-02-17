@@ -46,7 +46,7 @@
               <span>角色列表</span>
             </el-menu-item>
 
-            <el-menu-item index="1-1">
+            <el-menu-item index="rights">
               <i class="el-icon-menu"></i>
               <span>权限列表</span>
             </el-menu-item>
@@ -112,24 +112,24 @@
 export default {
   // 在home组件渲染完之前触发，如果当home组件渲染完毕，则表示登录了，所以严格来说必须在这个函数里面
   // 也不需要写else，因为钩子函数自动触发，如果登录成功
-  beforeMount () {
-    if (!localStorage.getItem('token')) {
+  beforeMount() {
+    if (!localStorage.getItem("token")) {
       this.$router.push({
-        name: 'login'
-      })
-      this.$message.warning('请登录')
+        name: "login"
+      });
+      this.$message.warning("请登录");
     }
   },
   methods: {
-    getOut () {
-      localStorage.clear()
+    getOut() {
+      localStorage.clear();
       this.$router.push({
-        name: 'login'
-      })
-      this.$message.success('退出成功')
+        name: "login"
+      });
+      this.$message.success("退出成功");
     }
   }
-}
+};
 </script>
 
 <style>
