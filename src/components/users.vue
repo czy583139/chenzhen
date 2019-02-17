@@ -136,6 +136,7 @@
       <el-form :model="formdata" label-width="80px">
         <el-form-item label="用户名">{{formdata.username}}</el-form-item>
         <el-form-item label="角色">
+          {{selectVal}}
           <el-select v-model="selectVal" placeholder="请选择角色">
             <el-option label="请选择" :value="selectVal" disabled></el-option>
             <el-option

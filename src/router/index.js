@@ -4,6 +4,7 @@ import login from '@/components/login.vue' // 由webpack模板提供这么写法
 import home from '@/components/home.vue'
 import users from '@/components/users.vue'
 import rights from '@/components/rights.vue'
+import roles from '@/components/roles.vue'
 
 Vue.use(Router)
 
@@ -29,6 +30,10 @@ export default new Router({
       path: '/rights',
       name: 'rights',
       component: rights
+    }, {
+      path: '/roles',
+      name: 'roles',
+      component: roles
     }]
   }]
 })
