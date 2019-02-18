@@ -44,7 +44,7 @@ HttpServer.install = function (Vue) {
 
 //   })
 
-//   // 3. 注入组件 比如封装的面包屑导航
+//   // 3. 注入组件 
 //   Vue.mixin({
 //     created: function () {
 //         // 逻辑...

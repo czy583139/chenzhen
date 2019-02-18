@@ -20,7 +20,7 @@
           placeholder="请输入内容"
           v-model="query"
         >
-          {{query}}
+        
           <el-button slot="append" icon="el-icon-search" @click="searchUser()"></el-button>
         </el-input>
         <el-button type="success" plain @click="showDiaAddUser()">添加用户</el-button>
