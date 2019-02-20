@@ -43,8 +43,22 @@
       <el-table-column prop="roleDesc" label="角色描述" width="300"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" circle size="mini" plain></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle size="mini" plain></el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            size="mini"
+            plain
+            @click="editRloes(scope.row)"
+          ></el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            size="mini"
+            plain
+            @click="deleteRoles(scope.row)"
+          ></el-button>
           <el-button
             type="success"
             icon="el-icon-check"
@@ -71,6 +85,41 @@
         <el-button type="primary" @click="addRolesrights()">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 添加角色 -->
+    <el-dialog title="添加角色" :visible.sync="dialogFormVisibleAdd">
+      <!-- 表单 -->
+      <el-form label-position="left" label-width="80px" :model="formdata">
+        <el-form-item label="角色名称">
+          <el-input v-model="formdata.roleName"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="formdata.roleDesc"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+        <el-button type="primary" @click="putList()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 编辑方框弹出层 -->
+    <el-dialog title="编辑用户" :visible.sync="dialogFormVisibleUpdate">
+      <!-- 表单 -->
+      <el-form label-position="left" label-width="80px" :model="formdata">
+        <el-form-item label="角色名称">
+          <el-input v-model="formdata.roleName"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="formdata.roleDesc"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleUpdate = false">取 消</el-button>
+        <el-button type="primary" @click="UpdateList()">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -79,6 +128,13 @@
 export default {
   data() {
     return {
+      dialogFormVisibleUpdate: false,
+      formdata: {
+        roleName: "",
+        roleDesc: "",
+        roleId: ""
+      },
+      dialogFormVisibleAdd: false,
       list: [],
       treeList: [],
       dialogFormVisible: false,
@@ -94,6 +150,51 @@ export default {
     this.getList();
   },
   methods: {
+    async editRloes(user) {
+      const res = await this.$http.get(`roles/${user.id}`);
+      const {
+        data,
+        meta: { status }
+      } = res.data;
+      this.formdata = data;
+      this.dialogFormVisibleUpdate = true;
+    },
+    async UpdateList() {
+      const res = await this.$http.put(
+        `roles/${this.formdata.roleId}`,
+        this.formdata
+      );
+      const {
+        data,
+        meta: { msg, status }
+      } = res.data;
+      if (status === 200) {
+        this.$message.success("修改成功");
+        this.getList();
+        this.dialogFormVisibleUpdate = false;
+      }
+    },
+    deleteRoles(user) {
+      this.$confirm("此操作将永久删除该角色, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$http.delete(`roles/${user.id}`);
+          const {
+            meta: { msg, status }
+          } = res.data;
+          if (status === 200) {
+            this.pagenum = 1;
+            this.getList();
+            this.$message.success("删除成功");
+          }
+        })
+        .catch(() => {
+          this.$message.info("取消成功");
+        });
+    },
     async getList() {
       const res = await this.$http.get("roles");
       const {
@@ -102,7 +203,21 @@ export default {
       } = res.data;
       this.list = data;
     },
-    showDiaAddUser() {},
+    async showDiaAddUser() {
+      this.dialogFormVisibleAdd = true;
+    },
+    async putList() {
+      const res = await this.$http.post(`roles`, this.formdata);
+      const {
+        data,
+        meta: { status, msg }
+      } = res.data;
+      if (status === 201) {
+        this.$message.success("添加角色成功");
+        this.dialogFormVisibleAdd = false;
+        this.getList();
+      }
+    },
     async closeTag(role, rights) {
       const res = await this.$http.delete(
         `roles/${role.id}/rights/${rights.id}`

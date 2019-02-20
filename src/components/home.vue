@@ -22,13 +22,13 @@
           class="el-menu-vertical-demo"
         >
           <!-- 1 -->
-          <el-submenu :index="itme.order" v-for="(itme) in list" :key="itme.id">
+          <el-submenu :index="itme.order+ ''" v-for="(itme) in list" :key="itme.id">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>{{itme.authName}}</span>
             </template>
 
-            <el-menu-item :index="itme1.path" v-for="(itme1) in itme.children" :key="itme1.id">
+            <el-menu-item :index="itme1.path + ''" v-for="(itme1) in itme.children" :key="itme1.id">
               <i class="el-icon-menu"></i>
               <span>{{itme1.authName}}</span>
             </el-menu-item>
@@ -48,12 +48,12 @@ export default {
   // 在home组件渲染完之前触发，如果当home组件渲染完毕，则表示登录了，所以严格来说必须在这个函数里面
   // 也不需要写else，因为钩子函数自动触发，如果登录成功
   beforeMount() {
-    if (!localStorage.getItem("token")) {
-      this.$router.push({
-        name: "login"
-      });
-      this.$message.warning("请登录");
-    }
+    // if (!localStorage.getItem("token")) {
+    //   this.$router.push({
+    //     name: "login"
+    //   });
+    //   this.$message.warning("请登录");
+    // }
   },
   data() {
     return {
