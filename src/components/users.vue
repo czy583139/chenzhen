@@ -26,7 +26,7 @@
       </el-col>
     </el-row>
     <!-- 表格区域 -->
-    <el-table :data="list" style="width: 100%">
+    <el-table :data="list" style="width: 100%" v-loading="loading">
       <!-- 1. label 控制的是当前列的表头
       2. prop 控制的是当前列单元格的数据,prop 的值来源于外层 data 绑定的数据 tableData 数组中对象的 key 名-->
       <el-table-column prop="id" label="#" width="80"></el-table-column>
@@ -182,6 +182,7 @@
 export default {
   data() {
     return {
+      loading: true,
       roles: [],
       //这个值是当前数据rid值，为了避免冲突id这里选择-1代替，因为后台数据中没有-1标示值
       selectVal: -1,
@@ -233,6 +234,7 @@ export default {
       if (status === 200) {
         this.total = data.total;
         this.list = data.users;
+        this.loading = false;
       }
     },
     // element中的方法，下面是自己写的代码

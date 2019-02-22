@@ -36,7 +36,9 @@
         </el-menu>
       </el-aside>
       <el-main class="main">
-        <router-view></router-view>
+        <transition :name="transitionName">
+          <router-view></router-view>
+        </transition>
       </el-main>
       <!-- 这里得单独给主体部分提供容器，因为App.vue的容器是给login页面和home页面提供的整个容器 -->
     </el-container>
@@ -57,7 +59,8 @@ export default {
   },
   data() {
     return {
-      list: []
+      list: [],
+      transitionName: ""
     };
   },
   methods: {
@@ -81,6 +84,13 @@ export default {
   },
   created() {
     this.getmuens();
+  },
+  watch: {
+    $route(to, from) {
+      const toDepth = to.path.split("/").length;
+      const fromDepth = from.path.split("/").length;
+      this.transitionName = toDepth < fromDepth ? "slide-right" : "slide-left";
+    }
   }
 };
 </script>
@@ -111,5 +121,10 @@ h2 {
 }
 el-col {
   width: 100%;
+}
+.slide-right {
+  transition: all 60s;
+
+  margin-right: 10px;
 }
 </style>
