@@ -1,24 +1,27 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import login from '@/components/login.vue' // 由webpack模板提供这么写法
-import home from '@/components/home.vue'
-import users from '@/components/users.vue'
-import rights from '@/components/rights.vue'
-import roles from '@/components/roles.vue'
-import goods from '@/components/goodslist.vue'
-import goodsadd from '@/components/goodsadd.vue'
-import goodsParmars from '@/components/goodsParmars.vue'
-import goodsCate from '@/components/goodscate.vue'
-import order from '@/components/order.vue'
-import list from '../components/list.vue'
+import VueRouter from 'vue-router'
+
+const login = () => import('@/components/login.vue') // 由webpack模板提供这么写法
+const home = () => import('@/components/home.vue')
+const users = () => import('@/components/users.vue')
+const rights = () => import('@/components/rights.vue')
+const roles = () => import('@/components/roles.vue')
+const goods = () => import('@/components/goodslist.vue')
+const goodsadd = () => import('@/components/goodsadd.vue')
+const goodsParmars = () => import('@/components/goodsParmars.vue')
+const goodsCate = () => import('@/components/goodscate.vue')
+const order = () => import('@/components/order.vue')
+const list = () => import('@/components/list.vue')
+
+
 import {
   Message
 } from 'element-ui';
 
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-const router = new Router({
+const router = new VueRouter({
   routes: [{
     path: '/',
     redirect: '/login'

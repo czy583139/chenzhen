@@ -2,13 +2,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import HttpServer from '@/router/axios'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+import ELEMENT from 'element-ui'
+// import 'element-ui/lib/theme-chalk/index.css'
 import moment from 'moment'
 // import VeeValidate from 'vee-validate'
 import buildBread from '@/components/bulidBread.vue'
 import '@/assets/base.css'
-import ElementUIs from 'element-ui'
+
 
 //全局自定义面包屑组件,在之前学过的全局组件当中，里面有template，data等等，是一组对象，前面一个是组件的名字
 //到时候需要用到这个组件的时候将buildBread作为标签名，在由之前的porps传的属性进行传值，就ok了
@@ -19,8 +19,8 @@ Vue.filter('fmtdate', (v) => {
 })
 
 //调用element插件
-Vue.use(ElementUI)
-Vue.use(ElementUIs)
+Vue.use(ELEMENT)
+// Vue.use(ElementUIs)
 // 设置 Vue.config.productionTip = false 来关闭生产模式下给出的提示
 Vue.config.productionTip = false
 
