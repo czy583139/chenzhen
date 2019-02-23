@@ -18,7 +18,7 @@
         <el-menu
           :unique-opened="true"
           :router="true"
-          default-active="2"
+          :default-active="$route.name"
           class="el-menu-vertical-demo"
         >
           <!-- 1 -->
@@ -60,7 +60,8 @@ export default {
   data() {
     return {
       list: [],
-      transitionName: ""
+      transitionName: "",
+      all: ""
     };
   },
   methods: {

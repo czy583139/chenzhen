@@ -86,6 +86,7 @@
 
 <script>
 import ElTreeGrid from "element-tree-grid";
+import qs from "qs";
 
 export default {
   components: {
@@ -116,8 +117,11 @@ export default {
   },
   created() {
     this.getGoodsCate();
+    this.fn1();
   },
+
   methods: {
+    fn1() {},
     // 添加分类 - 发送请求
     async addCate() {
       if (this.selectedOptions.length === 0) {
@@ -173,13 +177,20 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`)
       this.pagesize = val;
+
       this.pagenum = 1;
       this.getGoodsCate();
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`)
       // this.pagenum = 2 = val
-      this.pagenum = val;
+      window.location.hash = this.$route.path + "#page=" + val;
+      var sum = window.location.hash.substring(
+        window.location.hash.length - 1,
+        window.location.hash.length
+      );
+
+      this.pagenum = sum;
       this.getGoodsCate();
     }
   }

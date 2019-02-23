@@ -20,7 +20,7 @@
     <el-tabs v-model="active" @tab-click="changeTab()">
       <el-tab-pane label="动态参数" name="1">
         <el-button type="success">设置动态参数</el-button>
-        <el-table height="650px" :data="list" style="width: 100%">
+        <el-table height="650px" :data="list" style="width: 100%" @expand-change="fn">
           <el-table-column type="expand" width="80">
             <template slot-scope="scope">
               <el-tag
@@ -89,6 +89,12 @@ export default {
   },
 
   methods: {
+    fn(row, expandedRows) {
+      console.log(expandedRows);
+      if (expandedRows.length > 1) {
+        expandedRows.shift();
+      }
+    },
     async handleClose(obj, itme) {
       obj.attr_vals.splice(obj.attr_vals.indexOf(itme), 1);
       const res = await this.$http.put(

@@ -2,7 +2,7 @@
   <el-card class="box">
     <build-bread level1="权限管理" level2="角色列表"></build-bread>
     <el-button type="success" plain @click="showDiaAddUser()" class="roles">添加角色</el-button>
-    <el-table height="650px" :data="list" style="width: 100%">
+    <el-table height="650px" :data="list" style="width: 100%" @expand-change="fn">
       <el-table-column type="expand" width="80">
         <template slot-scope="scope">
           <el-row v-for="(itme1) in scope.row.children" :key="itme1.id" class="level1">
@@ -150,6 +150,12 @@ export default {
     this.getList();
   },
   methods: {
+    fn(row, expandedRows) {
+      console.log(expandedRows);
+      if (expandedRows.length > 1) {
+        expandedRows.shift();
+      }
+    },
     async editRloes(user) {
       const res = await this.$http.get(`roles/${user.id}`);
       const {
